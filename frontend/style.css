@@ -1,5 +1,111 @@
+@font-face {
+    font-family: Inter;
+    src: url(../fonts/Manrope-VariableFont_wght.ttf);
+}
+
+@font-face {
+    font-family: Manabu;
+    src: url(../fonts/Manrope-VariableFont_wght.ttf);
+}
+
+
+
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    margin-top: 100px;
+    align-items: center;
+}
+
+body {
+    background-color: rgb(20, 20, 20);
+    color: white;
+    font-family: Inter;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+
+header, .header {
+    /* width: 100px; */
+    background-color: rgb(20, 20, 20);
+}
+
+header{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* height: 100vh; */
+    text-align: center;
+}
+
+h1{
+    font-family: Manabu;
+    font-weight: 700;
+    font-size: 70px;
+}
+
+button{
+    font-family: Inter;
+    font-size: 20px;
+    color: white;
+    background-color: orange;
+}
+
+input{
+    font-family: Inter;
+}
+
+section{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 50px;
+}
+
 .files{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    width: 40em;
+}
+
+.add-task{
+    width: 34em;
+    gap: 10px;
+}
+
+.add-task input{
+    font-size: 20px
+}
+
+.choose-task{
+    width: 34em;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: rgb(40, 40, 40);
+    border-radius: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.choose-task label{
+    font-size: 20px;
+}
+
+.files-buttons{
+   background-color: rgb(30, 30, 30);
+    border-radius: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding: 10px; 
 }

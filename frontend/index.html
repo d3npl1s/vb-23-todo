@@ -7,23 +7,33 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <section>
+    <header>
         <h1>TO-DO</h1>
-        <input type="text" placeholder="Введите файл">
-    </section>
-    <section>
-        <input type="checkbox" name="Select" id=""><label for="Select">Выбрать все файлы</label>
-    </section>
-    <section class="files">
-        <div>
-            <h3>Какие то файлы</h3>
-        </div>
-        <div>  
-            <h3>Какие то файлы2</h3>
-        </div>
-        <div>  
-            <h3>Какие то файлы3</h3>
-        </div>
-    </section>
+    </header>
+    <main>
+        <section class="add-task">
+            <input type="text" placeholder="input task">
+            <button>Add task</button>
+        </section>
+        <section>
+            <div class="choose-task">
+                <div><input type="checkbox" name="Select" id=""><label for="Select">Select all</label></div><br>
+                <button>Delete complited</button>
+            </div>
+        </section>
+
+
+        <section class="files">
+            <div class="files-buttons">
+                <button>all (0)</button>
+            </div>
+            <div class="files-buttons">  
+                <button>Active (0)</button>
+            </div>
+            <div class="files-buttons">   
+                <button>Complited (0)</button>
+            </div>
+        </section>
+    </main>
 </body>
 </html>
