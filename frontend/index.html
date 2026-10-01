@@ -12,8 +12,8 @@
     </header>
     <main>
         <section class="add-task">
-            <input type="text" placeholder="input task">
-            <button>Add task</button>
+            <input type="text" placeholder="input task" id="addtask_input">
+            <button id="addtask_button">Add task</button>
         </section>
         <section>
             <div class="choose-task">
@@ -25,15 +25,17 @@
 
         <section class="files">
             <div class="files-buttons">
-                <button>all (0)</button>
+                <div class="head_tasks">all (0)</div>
+                <div class="all_tasks" id="allevents_div"></div>
             </div>
             <div class="files-buttons">  
-                <button>Active (0)</button>
+                <div class="head_tasks">Active (0)</div>
             </div>
             <div class="files-buttons">   
-                <button>Complited (0)</button>
+                <div class="head_tasks">Complited (0)</div>
             </div>
         </section>
     </main>
+    <script src="./script.js"></script>
 </body>
 </html>
