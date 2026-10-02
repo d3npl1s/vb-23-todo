@@ -17,7 +17,7 @@
         </section>
         <section>
             <div class="choose-task">
-                <div><input type="checkbox" name="Select" id=""><label for="Select">Select all</label></div><br>
+                <div><input type="checkbox" name="Select" id="buttonSelectAll"><label for="Select">Select all</label></div><br>
                 <button>Delete complited</button>
             </div>
         </section>
@@ -25,16 +25,18 @@
 
         <section class="files">
             <div class="files-buttons">
-                <div class="head_tasks">all (0)</div>
-                <div class="all_tasks" id="allevents_div"></div>
+                <button class="head_tasks">all (0)</button>
+                
             </div>
             <div class="files-buttons">  
-                <div class="head_tasks">Active (0)</div>
+                <button class="head_tasks">Active (0)</button>
             </div>
             <div class="files-buttons">   
-                <div class="head_tasks">Complited (0)</div>
+                <button class="head_tasks">Complited (0)</button>
             </div>
+            <!-- //Надо сделать список и туда заносить задачи -->
         </section>
+        <div class="all_tasks" id="allevents_div"></div>
     </main>
     <script src="./script.js"></script>
 </body>
