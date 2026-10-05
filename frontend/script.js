@@ -32,6 +32,8 @@ const render = () => {
         setStyleForEmptyArray();
         setDisabledForButtons();
     }
+
+    ifAllTasksSelect();
     
     let AllTasks = '';
     arrayTasks.forEach((task) => {
@@ -149,6 +151,30 @@ const onClickDeleteComplited = () => {
     render();
 }
 
+const ifAllTasksSelect = () => {
+    if(arrayTasks.length > 0){
+        buttonSelectAll.checked = arrayTasks.every((task) => task.isComplited);
+    }else{
+        buttonSelectAll.checked = false;
+    }
+};
+
+const onDblClickListTask = (event) => {
+    const tag = event.target;
+    let dataIdTag = tag?.getAttribute('data-id');
+    if(dataIdTag === 'text-task') changeTextTask(tag);
+};
+
+const changeTextTask = (tag) => {
+    const currentTextTask = tag.textContent;
+    const hiddenInput = tag.previousElementSibling;
+    tag.hidden = true;
+    hiddenInput.hidden = false;
+}
+
+
 buttonSelectAll.addEventListener('click', onClickSelectAll);
 buttonDeleteComplited.addEventListener('click', onClickDeleteComplited);
+allEventsDiv.addEventListener('dblclick', onDblClickListTask)
+
 render();
