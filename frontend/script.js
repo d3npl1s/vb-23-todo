@@ -7,17 +7,22 @@ const buttonAllTasks = document.getElementById('button_all_tasks');
 const buttonActiveTasks = document.getElementById('button_active_tasks');
 const buttonComplitedTasks = document.getElementById('button_complited_tasks');
 const buttonDeleteComplited = document.getElementById('button_delete_complited');
+const pagination = document.getElementById('pagination');
 
 const FILTER_ALL = "all";
 const FILTER_ACTIVE = "active";
 const FILTER_COMPLITED = "complited";
 const CLASS_ACTIVE = "active";
+const COUNT_TASKS_ON_PAGE = 5;
 
 const ENTER = "Enter";
 const BUTTON = "BUTTON";
-const DISABLED = "disabled"
+const DISABLED = "disabled";
+const ESCAPE = "Escape";
+const DATA_ID = "data-id";
 
 let filterType = FILTER_ALL;
+let currentPage = 1;
 
 //Создать массив
 let arrayTasks = [];
@@ -25,6 +30,8 @@ let arrayTasks = [];
 
 //Самое важное!!
 const render = () => {
+    fixCurrentPage();
+    
     if(arrayTasks.length > 0){
         setStyleForOnFilter();
         removeDisabledFromButtons();
@@ -34,12 +41,13 @@ const render = () => {
     }
 
     ifAllTasksSelect();
+    setPagination();
     
     let AllTasks = '';
-    arrayTasks.forEach((task) => {
+    getTasksForCurrentPage().forEach((task) => {
         const tag = `<div data-id="${task.id}">
             <input type="checkbox" ${task.isComplited ? 'checked' : ''} name="" id="">
-            <input class="redTask" maxlength = "250" autocomplete="off" hidden>
+            <input class="redTask" maxlength = "250" autocomplete="off" data-id="edit-task-input" hidden>
             <span data-id="text-task">${task.text}</span>
             <button class="button_delete_onetask" data-id="button_delete_onetask">X</button>
         </div>`;
@@ -162,19 +170,68 @@ const ifAllTasksSelect = () => {
 const onDblClickListTask = (event) => {
     const tag = event.target;
     let dataIdTag = tag?.getAttribute('data-id');
-    if(dataIdTag === 'text-task') changeTextTask(tag);
+    if(dataIdTag === 'text-task') editTextTask(tag);
 };
 
-const changeTextTask = (tag) => {
+const editTextTask = (tag) => {
     const currentTextTask = tag.textContent;
     const hiddenInput = tag.previousElementSibling;
     tag.hidden = true;
     hiddenInput.hidden = false;
+    hiddenInput.value = currentTextTask;
+    hiddenInput.focus();
 }
+
+const saveEditTask = (newText, id) =>{
+    const currentTask = arrayTasks.find((task) => task.id === Number(id));
+    currentTask.text = newText;
+    render();
+}
+
+const onKeyUpSaveEditTask = (event) => {
+    const tag = event.target;
+    const dataIdTag = tag.getAttribute(DATA_ID);
+    if(event.code === ENTER && dataIdTag === "edit-task-input") {
+        saveEditTask(tag.value, tag.parentElement.getAttribute(DATA_ID)); 
+    };
+    if(event.code === ESCAPE) return render();
+};
+
+const getTasksForCurrentPage = () => {
+    const startTaskOfPage = (currentPage - 1) * 5;
+    const endTaskOfPage = startTaskOfPage + COUNT_TASKS_ON_PAGE;
+    return arrayTasks.slice(startTaskOfPage, endTaskOfPage);
+};
+
+const setPagination = () => {
+    const countPages = Math.ceil(arrayTasks.length / COUNT_TASKS_ON_PAGE);
+
+    let buttons = '';
+    for(let i = 1; i <= countPages; i++){
+        buttons += `<button class='page-button ${i === currentPage ? " " + CLASS_ACTIVE : " "}'>${i}</button>` 
+    }
+
+    pagination.innerHTML = buttons;
+}
+
+const onClickPagination = (event) => {
+    const tag = event.target;
+    if(tag.tagName !== BUTTON) return;
+    currentPage = Number(tag.textContent);
+    render();
+};
+
+const fixCurrentPage = () => {
+    const countPages = Math.ceil(arrayTasks.length/COUNT_TASKS_ON_PAGE);
+    const lastPage = countPages > 0 ? countPages : 1;
+    if(currentPage > lastPage) currentPage = lastPage;
+};
 
 
 buttonSelectAll.addEventListener('click', onClickSelectAll);
 buttonDeleteComplited.addEventListener('click', onClickDeleteComplited);
-allEventsDiv.addEventListener('dblclick', onDblClickListTask)
+allEventsDiv.addEventListener('dblclick', onDblClickListTask);
+allEventsDiv.addEventListener('keyup', onKeyUpSaveEditTask);
+pagination.addEventListener('click', onClickPagination);
 
 render();
