@@ -24,6 +24,7 @@ const DATA_ID = "data-id";
 
 let filterType = FILTER_ALL;
 let currentPage = 1;
+let activeCounter = 0;
 
 //Создать массив
 let arrayTasks = [];
@@ -32,7 +33,7 @@ let arrayTasks = [];
 //Самое важное!!
 const render = () => {
     fixCurrentPage();
-    
+    getCounterFilterTasks();
     if(arrayTasks.length > 0){
         setStyleForOnFilter();
         removeDisabledFromButtons();
@@ -46,9 +47,8 @@ const render = () => {
     
     let AllTasks = '';
 
-    switch(filterType){
-        case(FILTER_ALL):
-            getTasksForCurrentPage().forEach((task) => {
+
+    getTasksForCurrentPage().forEach((task) => {
             const tag = `<div class="render_" data-id="${task.id}">
                 <input type="checkbox" ${task.isComplited ? 'checked' : ''} name="" id="">
                 <input class="redTask" maxlength = "250" autocomplete="off" data-id="edit-task-input" hidden>
@@ -57,20 +57,6 @@ const render = () => {
             </div>`;
             AllTasks += tag;
         })
-        case(FILTER_ACTIVE):
-            
-    }
-
-    // if(filterType === FILTER_ALL) {getTasksForCurrentPage().forEach((task) => {
-    //         const tag = `<div class="render_" data-id="${task.id}">
-    //             <input type="checkbox" ${task.isComplited ? 'checked' : ''} name="" id="">
-    //             <input class="redTask" maxlength = "250" autocomplete="off" data-id="edit-task-input" hidden>
-    //             <span data-id="text-task" class="render_span">${task.text}</span>
-    //             <button class="button_delete_onetask" data-id="button_delete_onetask">X</button>
-    //         </div>`;
-    //         AllTasks += tag;
-    //     })
-    // }
     allEventsDiv.innerHTML = AllTasks;
 };
 
@@ -218,11 +204,11 @@ const onKeyUpSaveEditTask = (event) => {
 const getTasksForCurrentPage = () => {
     const startTaskOfPage = (currentPage - 1) * 5;
     const endTaskOfPage = startTaskOfPage + COUNT_TASKS_ON_PAGE;
-    return arrayTasks.slice(startTaskOfPage, endTaskOfPage);
+    return getFilteredTasks().slice(startTaskOfPage, endTaskOfPage);
 };
 
 const setPagination = () => {
-    const countPages = Math.ceil(arrayTasks.length / COUNT_TASKS_ON_PAGE);
+    const countPages = Math.ceil(getFilteredTasks().length / COUNT_TASKS_ON_PAGE);
 
     let buttons = '';
     for(let i = 1; i <= countPages; i++){
@@ -240,7 +226,7 @@ const onClickPagination = (event) => {
 };
 
 const fixCurrentPage = () => {
-    const countPages = Math.ceil(arrayTasks.length/COUNT_TASKS_ON_PAGE);
+    const countPages = Math.ceil(getFilteredTasks().length/COUNT_TASKS_ON_PAGE);
     const lastPage = countPages > 0 ? countPages : 1;
     if(currentPage > lastPage) currentPage = lastPage;
 };
@@ -261,7 +247,25 @@ const onClickSelectFilter = (event) => {
         filterType = FILTER_COMPLITED;
     }
     setStyleForOnFilter();
+    currentPage = 1;
     render();
+}
+
+const getFilteredTasks = () => {
+    if(filterType === FILTER_ACTIVE){
+        return arrayTasks.filter((task) => !task.isComplited);
+        
+    }
+    if(filterType === FILTER_COMPLITED){
+        return arrayTasks.filter((task) => task.isComplited);
+    }
+    return arrayTasks;
+}
+
+const getCounterFilterTasks = () => {
+    buttonFilterAllTasks.textContent = `all (${arrayTasks.length})`;
+    buttonFilterActiveTasks.textContent = `active (${arrayTasks.filter((task) => !task.isComplited).length})`;
+    buttonFilterComplitedTasks.textContent = `complited (${arrayTasks.filter((task) => task.isComplited).length})`;
 }
 
 
@@ -271,5 +275,11 @@ allEventsDiv.addEventListener('dblclick', onDblClickListTask);
 allEventsDiv.addEventListener('keyup', onKeyUpSaveEditTask);
 pagination.addEventListener('click', onClickPagination);
 sectionFilterTasks.addEventListener('click', onClickSelectFilter);
+allEventsDiv.addEventListener('focusout', (event) => {
+      const tag = event.target;
+      if(tag.getAttribute(DATA_ID) === 'edit-task-input'){
+          render();
+      }
+  });
 
 render();
