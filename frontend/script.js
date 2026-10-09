@@ -3,10 +3,11 @@ const addTaskButton = document.getElementById('addtask_button');
 const addTaskInput = document.getElementById('addtask_input');
 const allEventsDiv = document.querySelector('.all_tasks');
 const buttonSelectAll = document.getElementById('buttonSelectAll');
-const buttonAllTasks = document.getElementById('button_all_tasks');
-const buttonActiveTasks = document.getElementById('button_active_tasks');
-const buttonComplitedTasks = document.getElementById('button_complited_tasks');
+const buttonFilterAllTasks = document.getElementById('button_all_tasks');
+const buttonFilterActiveTasks = document.getElementById('button_active_tasks');
+const buttonFilterComplitedTasks = document.getElementById('button_complited_tasks');
 const buttonDeleteComplited = document.getElementById('button_delete_complited');
+const sectionFilterTasks = document.querySelector('.files');
 const pagination = document.getElementById('pagination');
 
 const FILTER_ALL = "all";
@@ -44,15 +45,32 @@ const render = () => {
     setPagination();
     
     let AllTasks = '';
-    getTasksForCurrentPage().forEach((task) => {
-        const tag = `<div data-id="${task.id}">
-            <input type="checkbox" ${task.isComplited ? 'checked' : ''} name="" id="">
-            <input class="redTask" maxlength = "250" autocomplete="off" data-id="edit-task-input" hidden>
-            <span data-id="text-task">${task.text}</span>
-            <button class="button_delete_onetask" data-id="button_delete_onetask">X</button>
-        </div>`;
-        AllTasks += tag;
-    })
+
+    switch(filterType){
+        case(FILTER_ALL):
+            getTasksForCurrentPage().forEach((task) => {
+            const tag = `<div class="render_" data-id="${task.id}">
+                <input type="checkbox" ${task.isComplited ? 'checked' : ''} name="" id="">
+                <input class="redTask" maxlength = "250" autocomplete="off" data-id="edit-task-input" hidden>
+                <span data-id="text-task" class="render_span">${task.text}</span>
+                <button class="button_delete_onetask" data-id="button_delete_onetask">X</button>
+            </div>`;
+            AllTasks += tag;
+        })
+        case(FILTER_ACTIVE):
+            
+    }
+
+    // if(filterType === FILTER_ALL) {getTasksForCurrentPage().forEach((task) => {
+    //         const tag = `<div class="render_" data-id="${task.id}">
+    //             <input type="checkbox" ${task.isComplited ? 'checked' : ''} name="" id="">
+    //             <input class="redTask" maxlength = "250" autocomplete="off" data-id="edit-task-input" hidden>
+    //             <span data-id="text-task" class="render_span">${task.text}</span>
+    //             <button class="button_delete_onetask" data-id="button_delete_onetask">X</button>
+    //         </div>`;
+    //         AllTasks += tag;
+    //     })
+    // }
     allEventsDiv.innerHTML = AllTasks;
 };
 
@@ -117,36 +135,36 @@ const buttonDeleteTaskClick = (id) => {
 
 
 const setStyleForOnFilter = () => {
-    buttonAllTasks.classList.remove(CLASS_ACTIVE);
-    buttonActiveTasks.classList.remove(CLASS_ACTIVE);
-    buttonComplitedTasks.classList.remove(CLASS_ACTIVE);
+    buttonFilterAllTasks.classList.remove(CLASS_ACTIVE);
+    buttonFilterActiveTasks.classList.remove(CLASS_ACTIVE);
+    buttonFilterComplitedTasks.classList.remove(CLASS_ACTIVE);
 
-    if(filterType === FILTER_ALL) buttonAllTasks.classList.add(CLASS_ACTIVE);
-    if(filterType === FILTER_ACTIVE) buttonActiveTasks.classList.add(CLASS_ACTIVE);
-    if(filterType === FILTER_COMPLITED) buttonComplitedTasks.classList.add(CLASS_ACTIVE);
+    if(filterType === FILTER_ALL) buttonFilterAllTasks.classList.add(CLASS_ACTIVE);
+    if(filterType === FILTER_ACTIVE) buttonFilterActiveTasks.classList.add(CLASS_ACTIVE);
+    if(filterType === FILTER_COMPLITED) buttonFilterComplitedTasks.classList.add(CLASS_ACTIVE);
 };
 
 
 const removeDisabledFromButtons = () => {
     buttonSelectAll.removeAttribute(DISABLED);
     buttonDeleteComplited.removeAttribute(DISABLED);
-    buttonAllTasks.removeAttribute(DISABLED);
-    buttonComplitedTasks.removeAttribute(DISABLED);
-    buttonActiveTasks.removeAttribute(DISABLED);
+    buttonFilterAllTasks.removeAttribute(DISABLED);
+    buttonFilterComplitedTasks.removeAttribute(DISABLED);
+    buttonFilterActiveTasks.removeAttribute(DISABLED);
 };
 
 const setDisabledForButtons = () => {
     buttonSelectAll.setAttribute(DISABLED, DISABLED);
     buttonDeleteComplited.setAttribute(DISABLED, DISABLED);
-    buttonAllTasks.setAttribute(DISABLED, DISABLED);
-    buttonComplitedTasks.setAttribute(DISABLED, DISABLED);
-    buttonActiveTasks.setAttribute(DISABLED, DISABLED);
+    buttonFilterAllTasks.setAttribute(DISABLED, DISABLED);
+    buttonFilterComplitedTasks.setAttribute(DISABLED, DISABLED);
+    buttonFilterActiveTasks.setAttribute(DISABLED, DISABLED);
 }
 
 const setStyleForEmptyArray = () => {
-    buttonAllTasks.classList.remove(CLASS_ACTIVE);
-    buttonActiveTasks.classList.remove(CLASS_ACTIVE);
-    buttonComplitedTasks.classList.remove(CLASS_ACTIVE);
+    buttonFilterAllTasks.classList.remove(CLASS_ACTIVE);
+    buttonFilterActiveTasks.classList.remove(CLASS_ACTIVE);
+    buttonFilterComplitedTasks.classList.remove(CLASS_ACTIVE);
 };
 
 const onClickSelectAll = () => {
@@ -227,11 +245,31 @@ const fixCurrentPage = () => {
     if(currentPage > lastPage) currentPage = lastPage;
 };
 
+const onClickSelectFilter = (event) => {
+    const tag = event.target;
+    if(tag.tagName !== BUTTON){
+        return;
+    }
+    if(tag.id === 'button_all_tasks'){
+        filterType = FILTER_ALL;
+    }
+    if(tag.id === 'button_active_tasks') {
+        filterType = FILTER_ACTIVE;
+        
+    }
+    if(tag.id === 'button_complited_tasks') {
+        filterType = FILTER_COMPLITED;
+    }
+    setStyleForOnFilter();
+    render();
+}
+
 
 buttonSelectAll.addEventListener('click', onClickSelectAll);
 buttonDeleteComplited.addEventListener('click', onClickDeleteComplited);
 allEventsDiv.addEventListener('dblclick', onDblClickListTask);
 allEventsDiv.addEventListener('keyup', onKeyUpSaveEditTask);
 pagination.addEventListener('click', onClickPagination);
+sectionFilterTasks.addEventListener('click', onClickSelectFilter);
 
 render();

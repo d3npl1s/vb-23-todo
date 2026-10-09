@@ -130,10 +130,24 @@ section{
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 200px;
+    gap: 5px;
+}
+
+.render_{
+    display: flex;
+    justify-content: space-between;
+    width: 25em;
 }
 
 .active{
     background-color: rgb(131, 85, 0);
+}
+
+.render_span{
+    background-color: rgb(60, 60, 60);
+    padding: 5px 10px;
+    border-radius: 10px;
 }
 
 button:disabled {
