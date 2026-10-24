@@ -1,18 +1,4 @@
-// ============================================================
-// frontend/script.js  —  ИЗМЕНЕНО 23.10.2026: подключили backend.
-//
-// Что поменялось в ЭТОМ файле:
-//   1. Добавлена связка с сервером через fetch (константа API_URL).
-//   2. Все изменения данных (добавить / отметить / удалить /
-//      сохранить текст / Select all / Delete complited) теперь
-//      идут НА СЕРВЕР, а не правят локальный arrayTasks.
-//   3. arrayTasks теперь «витрина»: заполняется только из ответа
-//      сервера в loadTasks(). Прямые push/filter/find по нему убраны —
-//      старый код оставлен ЗАКОММЕНТИРОВАННЫМ внутри функций.
-//   4. Поле задачи переименовано: isComplited -> completed,
-//      чтобы совпадать с сервером (сервер хранит completed).
-//   5. Исправлена опечатка в focusout (лишняя кириллица "п").
-// ============================================================
+
 
 //Переменные
 const addTaskButton = document.getElementById('addtask_button');
@@ -38,24 +24,23 @@ const DISABLED = "disabled";
 const ESCAPE = "Escape";
 const DATA_ID = "data-id";
 
-// Адрес сервера (backend). Сервер должен быть запущен: node server.js
+// Адрес сервера
 const API_URL = "http://localhost:3000";
 
 let filterType = FILTER_ALL;
 let currentPage = 1;
 
-//Создать массив (теперь это «витрина»: наполняется только с сервера)
+
 let arrayTasks = [];
 
-// Загрузить список задач с сервера и нарисовать.
-// Это единственное место, где arrayTasks получает данные.
+//Самое важное!! v2
 const loadTasks = async () => {
     try {
         const response = await fetch(API_URL + "/tasks");
         arrayTasks = await response.json();
         render();
     } catch (error) {
-        console.error("Не удалось получить задачи с сервера. Проверь, что сервер запущен (node server.js):", error);
+        console.error("Не удалось получить задачи с сервера.", error);
     }
 };
 
@@ -363,5 +348,4 @@ allEventsDiv.addEventListener('focusout', (event) => {
       }
   });
 
-// render();  // БЫЛО — стартовали с пустого локального массива
-loadTasks();  // СТАЛО — при открытии страницы грузим задачи с сервера
+loadTasks();

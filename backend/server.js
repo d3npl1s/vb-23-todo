@@ -8,6 +8,13 @@ app.use(express.json());
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(200);
+    }
+
     next();
 });
 
@@ -19,7 +26,7 @@ app.use((req, res, next) => {
 
 
 let tasks = [];
-let nextId = 1;
+let nextId = 0;
 
 
 app.get('/tasks', (req, res) => {
@@ -71,7 +78,7 @@ app.delete('/tasks/completed', (req, res) => {
     res.json({ status: 'ok' });
 });
 
-т
+
 app.delete('/tasks/:id', (req, res) => {
     const id = Number(req.params.id);
     tasks = tasks.filter(task => task.id !== id);
@@ -83,5 +90,12 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log('Сервер запущен: http://localhost:' + PORT);
+    console.log('запущено: http://localhost:' + PORT);
 });
+
+// app.patch('/tasks/:id', (req, res) => {
+//     const id = Number(req.params.id);
+//     const task = tasks.find((task) => task.id === id);
+//     task.text = req.body.text;
+//     res.json(task);
+// })
